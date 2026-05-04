@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RPS — Neon Arena</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Background particles -->
+    <div class="bg-grid"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="app-wrapper">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <h1>NEON <span class="logo-accent">ARENA</span></h1>
+        </div>
+        <p class="subtitle">Rock · Paper · Scissors</p>
+      </header>
+
+      <!-- Mode Toggle -->
+      <div class="mode-bar">
+        <button class="mode-btn active" id="modeAI" onclick="setMode('ai')">
+          <span class="mode-icon">🤖</span> vs AI
+        </button>
+        <button class="mode-btn" id="modePVP" onclick="setMode('pvp')">
+          <span class="mode-icon">👥</span> 2 Players
+        </button>
+      </div>
+
+      <!-- Difficulty (AI only) -->
+      <div class="difficulty-bar" id="difficultyBar">
+        <span class="diff-label">DIFFICULTY</span>
+        <button
+          class="diff-btn active"
+          id="diffEasy"
+          onclick="setDifficulty('easy')"
+        >
+          EASY
+        </button>
+        <button
+          class="diff-btn"
+          id="diffMedium"
+          onclick="setDifficulty('medium')"
+        >
+          MEDIUM
+        </button>
+        <button class="diff-btn" id="diffHard" onclick="setDifficulty('hard')">
+          HARD
+        </button>
+      </div>
+
+      <!-- Scoreboard + Timer -->
+      <div class="hud">
+        <div class="score-card" id="scoreLeft">
+          <div class="score-label" id="labelLeft">YOU</div>
+          <div class="score-value" id="scorePlayer">0</div>
+        </div>
+
+        <div class="timer-wrap">
+          <div class="timer-ring">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="34" />
+              <circle
+                class="ring-fill"
+                id="timerRing"
+                cx="40"
+                cy="40"
+                r="34"
+                stroke-dasharray="213.6"
+                stroke-dashoffset="0"
+              />
+            </svg>
+            <div class="timer-num" id="timerNum">30</div>
+          </div>
+          <div class="timer-label">SEC</div>
+          <button class="timer-btn" id="startTimerBtn" onclick="startTimerUI()">
+            START TIMER
+          </button>
+          <div class="timer-help" id="timerHelp">
+            Press to start the clock when ready.
+          </div>
+        </div>
+
+        <div class="score-card" id="scoreRight">
+          <div class="score-label" id="labelRight">AI</div>
+          <div class="score-value" id="scoreOpponent">0</div>
+        </div>
+      </div>
+
+      <!-- Arena -->
+      <div class="arena">
+        <!-- Player Card -->
+        <div class="player-card" id="cardPlayer">
+          <div class="card-header" id="cardPlayerLabel">PLAYER</div>
+          <div class="move-display" id="movePlayer">
+            <span class="move-emoji idle">❓</span>
+          </div>
+          <div class="move-name" id="moveNamePlayer">—</div>
+        </div>
+
+        <!-- VS + Result -->
+        <div class="center-column">
+          <div class="vs-badge">VS</div>
+          <div class="result-display" id="resultDisplay">
+            <span id="resultText">Pick your move!</span>
+            <span id="resultEmoji"></span>
+          </div>
+          <div class="round-info" id="roundInfo"></div>
+        </div>
+
+        <!-- Opponent Card -->
+        <div class="player-card" id="cardOpponent">
+          <div class="card-header" id="cardOpponentLabel">AI</div>
+          <div class="move-display" id="moveOpponent">
+            <span class="move-emoji idle">❓</span>
+          </div>
+          <div class="move-name" id="moveNameOpponent">—</div>
+        </div>
+      </div>
+
+      <!-- Move Buttons -->
+      <div class="move-buttons" id="moveButtons">
+        <button
+          class="move-btn"
+          id="btnRock"
+          onclick="playerMove('rock')"
+          data-move="rock"
+        >
+          <span class="btn-icon">🪨</span>
+          <span class="btn-label">ROCK</span>
+          <div class="btn-glow"></div>
+        </button>
+        <button
+          class="move-btn"
+          id="btnPaper"
+          onclick="playerMove('paper')"
+          data-move="paper"
+        >
+          <span class="btn-icon">📄</span>
+          <span class="btn-label">PAPER</span>
+          <div class="btn-glow"></div>
+        </button>
+        <button
+          class="move-btn"
+          id="btnScissors"
+          onclick="playerMove('scissors')"
+          data-move="scissors"
+        >
+          <span class="btn-icon">✂️</span>
+          <span class="btn-label">SCISSORS</span>
+          <div class="btn-glow"></div>
+        </button>
+      </div>
+
+      <!-- PVP Turn Indicator -->
+      <div class="pvp-indicator" id="pvpIndicator" style="display: none">
+        <div class="turn-badge" id="turnBadge">🟢 Player 1's Turn</div>
+        <div class="hidden-move-notice" id="hiddenNotice">
+          Your move is hidden from opponent
+        </div>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div class="gameover-overlay" id="gameoverOverlay" style="display: none">
+        <div class="gameover-card">
+          <div class="gameover-icon" id="gameoverIcon">🏆</div>
+          <div class="gameover-title" id="gameoverTitle">GAME OVER</div>
+          <div class="gameover-sub" id="gameoverSub">Final Score</div>
+          <div class="gameover-score" id="gameoverScore">0 – 0</div>
+          <button class="reset-btn pulse" onclick="resetGame()">
+            PLAY AGAIN
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="reset-btn" onclick="resetGame()">↺ RESET GAME</button>
+      </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="sfxClick" src=""></audio>
+    <audio id="sfxReveal" src=""></audio>
+    <audio id="sfxWin" src=""></audio>
+    <audio id="sfxLose" src=""></audio>
+    <audio id="sfxDraw" src=""></audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
