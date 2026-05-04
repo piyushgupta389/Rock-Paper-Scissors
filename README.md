@@ -8,7 +8,7 @@ A modern, interactive **Rock Paper Scissors game** built using **HTML, CSS, and 
 
 ## 🕹 Play Online
 
-👉 Click here to play:  https://piyushgupta389.github.io/Rock-Paper-Scissors/
+👉 Click here to play: https://piyushgupta389.github.io/Rock-Paper-Scissors/ 
 
 ### 🎯 Game Modes
 - 🤖 **AI Mode** – Play against smart AI
