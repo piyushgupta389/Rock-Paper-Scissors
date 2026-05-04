@@ -25,7 +25,7 @@ A modern, interactive **Rock Paper Scissors game** built using **HTML, CSS, and 
 
 ### ⚡ Gameplay Experience
 - Instant player move response
-- AI "thinking" delay (1.5s for realism)
+- AI "thinking" delay
 - Smooth animations & transitions
 - Result display with emojis & effects
 
@@ -87,4 +87,3 @@ A modern, interactive **Rock Paper Scissors game** built using **HTML, CSS, and 
 
 ---
 
-## 📂 Project Structure
